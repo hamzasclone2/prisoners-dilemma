@@ -1,0 +1,142 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Match.gd" type="Script" id=1]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.00645161, 1 )
+colors = PoolColorArray( 0.0451613, 0.0451613, 0.0451613, 1, 0, 0, 0, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1024.0
+texture = SubResource( 2 )
+stretch_mode = 1
+
+[node name="playerScore" type="Label" parent="."]
+margin_left = 275.058
+margin_top = 35.0564
+margin_right = 337.058
+margin_bottom = 49.0564
+text = "Score: %s"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="enemyScore" type="Label" parent="."]
+margin_left = 677.519
+margin_top = 32.2578
+margin_right = 739.519
+margin_bottom = 46.2578
+text = "Score: %s"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="choiceLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -116.5
+margin_top = 172.173
+margin_right = 116.5
+margin_bottom = 186.173
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cButton" type="Button" parent="."]
+margin_left = 204.433
+margin_top = 75.6775
+margin_right = 425.433
+margin_bottom = 140.678
+text = "Cooperate"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="dButton" type="Button" parent="."]
+margin_left = 609.648
+margin_top = 79.2572
+margin_right = 830.648
+margin_bottom = 144.257
+text = "Defect"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="confirmButton" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -125.5
+margin_top = -84.4347
+margin_right = 125.5
+margin_bottom = 15.5653
+text = "Confirm"
+
+[node name="Label1" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -75.0
+margin_top = 47.9868
+margin_right = 75.0
+margin_bottom = 61.9868
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -101.0
+margin_top = 94.6422
+margin_right = 101.0
+margin_bottom = 108.642
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -53.5
+margin_top = 143.796
+margin_right = 53.5
+margin_bottom = 162.796
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label4" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -79.5
+margin_top = 183.787
+margin_right = 79.5
+margin_bottom = 202.787
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_up" from="cButton" to="." method="_on_cButton_button_up"]
+[connection signal="button_up" from="dButton" to="." method="_on_dButton_button_up"]
+[connection signal="button_up" from="confirmButton" to="." method="_on_confirmButton_button_up"]
