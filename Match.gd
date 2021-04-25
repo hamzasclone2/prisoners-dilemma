@@ -13,13 +13,68 @@ var enemyChoice = 0
 var playerScore = 0
 var enemyScore = 0
 
+var enemyStrategy = 0
+
+var lastEnemyChoice = 0
+var lastPlayerChoice = 0
+
+var numRounds = 0
+
 func _ready():
 	playerScoreLabel.text = "Player Score: 0"
 	enemyScoreLabel.text = "Enemy Score: 0"
+	enemyStrategy = randomize_strategy()
+	print(enemyStrategy)
+
 
 func _process(delta):
 	playerScoreLabel.text = "Player Score: %s" % playerScore
 	enemyScoreLabel.text = "Enemy Score: %s" % enemyScore
+
+
+func randomize_strategy():
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	return rng.randi_range(0,5)
+
+
+func enemyStrategyFunction():
+	if enemyStrategy == 0: # Always Cooperate
+		enemyChoice = 0
+	elif enemyStrategy == 1: # Always Defect
+		enemyChoice = 1
+	elif enemyStrategy == 2: # Random
+		var rng = RandomNumberGenerator.new()
+		rng.randomize()
+		enemyChoice = rng.randi_range(0,1)
+	elif enemyStrategy == 3: # Switch-0
+		if(numRounds == 0):
+			enemyChoice = 0
+			lastEnemyChoice = 0
+		else:
+			if(lastEnemyChoice == 0):
+				enemyChoice = 1
+				lastEnemyChoice = 1
+			elif(lastEnemyChoice == 1):
+				enemyChoice = 0
+				lastEnemyChoice = 0
+	elif enemyStrategy == 4: # Switch-1
+		if(numRounds == 0):
+			enemyChoice = 1
+			lastEnemyChoice = 1
+		else:
+			if(lastEnemyChoice == 0):
+				enemyChoice = 1
+				lastEnemyChoice = 1
+			elif(lastEnemyChoice == 1):
+				enemyChoice = 0
+				lastEnemyChoice = 0
+	elif enemyStrategy == 5: # Tit-for-tat
+		if(numRounds == 0):
+			enemyChoice = 0
+		else:
+			enemyChoice = lastPlayerChoice
+
 
 func _on_cButton_button_up():
 	playerChoice = 0
@@ -32,6 +87,9 @@ func _on_dButton_button_up():
 
 
 func _on_confirmButton_button_up():
+	enemyStrategyFunction()
+	lastPlayerChoice = playerChoice
+	numRounds += 1
 	if(playerChoice == 0 and enemyChoice == 0):
 		playerScore += 3
 		enemyScore += 3
