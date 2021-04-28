@@ -20,6 +20,10 @@ var lastPlayerChoice = 0
 
 var numRounds = 0
 
+var playerHasDefected = false
+var playerDefectTwice = false
+var enemyMustDefectTwice = false
+
 func _ready():
 	playerScoreLabel.text = "Player Score: 0"
 	enemyScoreLabel.text = "Enemy Score: 0"
@@ -35,45 +39,81 @@ func _process(delta):
 func randomize_strategy():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
-	return rng.randi_range(0,5)
+	return rng.randi_range(0,10)
 
 
 func enemyStrategyFunction():
-	if enemyStrategy == 0: # Always Cooperate
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	
+	if enemyStrategy == 0: # Unconditional Cooperator
 		enemyChoice = 0
-	elif enemyStrategy == 1: # Always Defect
+	elif enemyStrategy == 1: # Unconditional Defector
 		enemyChoice = 1
 	elif enemyStrategy == 2: # Random
-		var rng = RandomNumberGenerator.new()
-		rng.randomize()
 		enemyChoice = rng.randi_range(0,1)
-	elif enemyStrategy == 3: # Switch-0
+	elif enemyStrategy == 3: # Switch-Cooperate
 		if(numRounds == 0):
 			enemyChoice = 0
-			lastEnemyChoice = 0
 		else:
 			if(lastEnemyChoice == 0):
 				enemyChoice = 1
-				lastEnemyChoice = 1
 			elif(lastEnemyChoice == 1):
 				enemyChoice = 0
-				lastEnemyChoice = 0
-	elif enemyStrategy == 4: # Switch-1
+	elif enemyStrategy == 4: # Switch-Defect
 		if(numRounds == 0):
 			enemyChoice = 1
-			lastEnemyChoice = 1
 		else:
 			if(lastEnemyChoice == 0):
 				enemyChoice = 1
-				lastEnemyChoice = 1
 			elif(lastEnemyChoice == 1):
 				enemyChoice = 0
-				lastEnemyChoice = 0
 	elif enemyStrategy == 5: # Tit-for-tat
 		if(numRounds == 0):
 			enemyChoice = 0
 		else:
 			enemyChoice = lastPlayerChoice
+	elif enemyStrategy == 6: # Suspicious Tit-for-tat
+		if(numRounds == 0):
+			enemyChoice = 1
+		else:
+			enemyChoice = lastPlayerChoice
+	elif enemyStrategy == 7: # Grim
+		if playerHasDefected:
+			enemyChoice = 1
+		else:
+			enemyChoice = 0
+	elif enemyStrategy == 8: # Pavlov / Win-stay-lose-shift / Singleton
+		if(numRounds == 0):
+			enemyChoice = 0
+		else:
+			if(lastPlayerChoice == lastEnemyChoice):
+				enemyChoice = 0
+			else:
+				enemyChoice = 1
+	elif enemyStrategy == 9: # Tit-for-two-tats 
+		if(numRounds == 0):
+			enemyChoice = 0
+		else:
+			if(playerDefectTwice):
+				enemyChoice = 1
+			else:
+				enemyChoice = 0
+	elif enemyStrategy == 10: # Two-tits-for-tat
+		if(numRounds == 0):
+			enemyChoice = 0
+		else:
+			if(lastPlayerChoice == 1):
+				enemyChoice = 1
+				enemyMustDefectTwice = true
+			elif(enemyMustDefectTwice):
+				enemyChoice == 1
+				if(playerChoice == 0):
+					enemyMustDefectTwice = false
+			elif(lastPlayerChoice == 0):
+				enemyChoice = 0
+				enemyMustDefectTwice = false
+				
 
 
 func _on_cButton_button_up():
@@ -88,8 +128,16 @@ func _on_dButton_button_up():
 
 func _on_confirmButton_button_up():
 	enemyStrategyFunction()
+	if(playerChoice == 1 and lastPlayerChoice == 1):
+		playerDefectTwice = true
+	else:
+		playerDefectTwice = false
 	lastPlayerChoice = playerChoice
+	lastEnemyChoice = enemyChoice
 	numRounds += 1
+	if(playerChoice == 1 and playerHasDefected == false):
+		playerHasDefected = true
+		
 	if(playerChoice == 0 and enemyChoice == 0):
 		playerScore += 3
 		enemyScore += 3
