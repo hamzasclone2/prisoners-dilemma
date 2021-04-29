@@ -39,7 +39,7 @@ func _process(delta):
 func randomize_strategy():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
-	return rng.randi_range(0,10)
+	return rng.randi_range(0,12)
 
 
 func enemyStrategyFunction():
@@ -113,7 +113,26 @@ func enemyStrategyFunction():
 			elif(lastPlayerChoice == 0):
 				enemyChoice = 0
 				enemyMustDefectTwice = false
-				
+	elif enemyStrategy == 11: # Generous Tit-for-tat
+		if(numRounds == 0):
+			enemyChoice = 0
+		else:
+			if(lastPlayerChoice == 1):
+				var percent = rng.randf()
+				if (percent < 0.1):
+					enemyChoice = 0
+				else:
+					enemyChoice = 1
+			else:
+				enemyChoice = lastPlayerChoice
+	elif enemyStrategy == 12: # Reverse Tit-for-tat
+		if(numRounds == 0):
+			enemyChoice =1
+		else:
+			if(lastPlayerChoice == 0):
+				enemyChoice = 1
+			else:
+				enemyChoice = 0
 
 
 func _on_cButton_button_up():
